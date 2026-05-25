@@ -27,23 +27,17 @@ jobs:
       uses: azure/CLI@v2
       with:
         inlineScript: |
-          echo "=== Starting WireMock Stubs Upload ==="
-
           ACCOUNT_NAME="${{ vars.STORAGE_ACCOUNT }}"
           SHARE_NAME="${{ vars.FILE_SHARE }}"
           ACCOUNT_KEY="${{ secrets.STORAGE_KEY }}"
-          
-          if [ -z "$ACCOUNT_NAME" ]; then
-            echo "❌ ERROR: STORAGE_ACCOUNT variable is empty!"
-            exit 1
-          fi
 
-          echo "📦 Using Storage Account : $ACCOUNT_NAME"
-          echo "📂 Using File Share      : $SHARE_NAME"
-
+          # Create directories
           az storage directory create --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --share-name $SHARE_NAME --name mappings || true
           az storage directory create --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --share-name $SHARE_NAME --name __files || true
 
+          # Upload entire folders
+          az storage file upload-batch --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --destination $SHARE_NAME/mappings --source ./stubs/mappings
+          az storage file upload-batch --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --destination $SHARE_NAME/__files --source ./stubs/__files
           az storage file upload-batch --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --destination $SHARE_NAME/mappings --source ./stubs/mappings
           az storage file upload-batch --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --destination $SHARE_NAME/__files --source ./stubs/__files
 
