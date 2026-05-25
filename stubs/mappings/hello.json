@@ -5,7 +5,7 @@
   },
   "response": {
     "status": 200,
-    "body": "Hello World from WireMock on Azure! May 25 4:00 pm",
+    "body": "Hello World from WireMock on Azure! May 25 4:15 pm",
     "headers": {
       "Content-Type": "text/plain"
     }
