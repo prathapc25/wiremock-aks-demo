@@ -31,7 +31,8 @@ jobs:
 
           ACCOUNT_NAME="${{ vars.STORAGE_ACCOUNT }}"
           SHARE_NAME="${{ vars.FILE_SHARE }}"
-
+          ACCOUNT_KEY="${{ secrets.STORAGE_KEY }}"
+          
           if [ -z "$ACCOUNT_NAME" ]; then
             echo "❌ ERROR: STORAGE_ACCOUNT variable is empty!"
             exit 1
@@ -40,18 +41,11 @@ jobs:
           echo "📦 Using Storage Account : $ACCOUNT_NAME"
           echo "📂 Using File Share      : $SHARE_NAME"
 
-          # Create directories if they don't exist
-          echo "Creating directories..."
+          az storage directory create --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --share-name $SHARE_NAME --name mappings || true
+          az storage directory create --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --share-name $SHARE_NAME --name __files || true
 
-          az storage directory create --account-name $ACCOUNT_NAME --share-name $SHARE_NAME --name mappings --auth-mode login --enable-file-backup-request-intent || true
-          az storage directory create --account-name $ACCOUNT_NAME --share-name $SHARE_NAME --name __files --auth-mode login --enable-file-backup-request-intent || true
-
-          # Upload mappings folder
-          echo "Uploading mappings..."
-
-          az storage file upload-batch --account-name $ACCOUNT_NAME --destination $SHARE_NAME/mappings --source ./stubs/mappings --auth-mode login --enable-file-backup-request-intent
-          az storage file upload-batch --account-name $ACCOUNT_NAME --destination $SHARE_NAME/__files --source ./stubs/__files --auth-mode login --enable-file-backup-request-intent
-
+          az storage file upload-batch --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --destination $SHARE_NAME/mappings --source ./stubs/mappings
+          az storage file upload-batch --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --destination $SHARE_NAME/__files --source ./stubs/__files
 
           echo "✅ Successfully uploaded WireMock stubs!"
     
