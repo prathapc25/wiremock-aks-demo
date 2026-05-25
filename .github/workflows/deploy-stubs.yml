@@ -1,0 +1,50 @@
+name: Deploy WireMock Stubs
+
+on:
+  push:
+    branches: [ main ]
+    paths: ['stubs/**']
+
+permissions:
+  id-token: write      # Required for OIDC
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Azure Login (OIDC)
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Upload Stubs to Azure Files
+      uses: azure/CLI@v2
+      with:
+        inlineScript: |
+          echo "Uploading mappings and __files..."
+
+          az storage directory create \
+            --account-name ${{ vars.STORAGE_ACCOUNT }} \
+            --share-name ${{ vars.FILE_SHARE }} \
+            --name mappings || true
+
+          az storage directory create \
+            --account-name ${{ vars.STORAGE_ACCOUNT }} \
+            --share-name ${{ vars.FILE_SHARE }} \
+            --name __files || true
+
+          az storage file upload-batch \
+            --account-name ${{ vars.STORAGE_ACCOUNT }} \
+            --destination ${{ vars.FILE_SHARE }}/mappings \
+            --source ./stubs/mappings
+
+          az storage file upload-batch \
+            --account-name ${{ vars.STORAGE_ACCOUNT }} \
+            --destination ${{ vars.FILE_SHARE }}/__files \
+            --source ./stubs/__files
