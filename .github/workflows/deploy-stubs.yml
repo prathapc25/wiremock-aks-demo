@@ -27,24 +27,48 @@ jobs:
       uses: azure/CLI@v2
       with:
         inlineScript: |
-          echo "Uploading mappings and __files..."
+          echo "=== Starting WireMock Stubs Upload ==="
+
+          ACCOUNT_NAME="${{ vars.STORAGE_ACCOUNT }}"
+          SHARE_NAME="${{ vars.FILE_SHARE }}"
+
+          if [ -z "$ACCOUNT_NAME" ]; then
+            echo "❌ ERROR: STORAGE_ACCOUNT variable is empty!"
+            exit 1
+          fi
+
+          echo "📦 Using Storage Account : $ACCOUNT_NAME"
+          echo "📂 Using File Share      : $SHARE_NAME"
+
+          # Create directories if they don't exist
+          echo "Creating directories..."
+          az storage directory create \
+            --account-name $ACCOUNT_NAME \
+            --share-name $SHARE_NAME \
+            --name mappings \
+            --auth-mode login || true
 
           az storage directory create \
-            --account-name ${{ vars.STORAGE_ACCOUNT }} \
-            --share-name ${{ vars.FILE_SHARE }} \
-            --name mappings || true
+            --account-name $ACCOUNT_NAME \
+            --share-name $SHARE_NAME \
+            --name __files \
+            --auth-mode login || true
 
-          az storage directory create \
-            --account-name ${{ vars.STORAGE_ACCOUNT }} \
-            --share-name ${{ vars.FILE_SHARE }} \
-            --name __files || true
-
+          # Upload mappings folder
+          echo "Uploading mappings..."
           az storage file upload-batch \
-            --account-name ${{ vars.STORAGE_ACCOUNT }} \
-            --destination ${{ vars.FILE_SHARE }}/mappings \
-            --source ./stubs/mappings
+            --account-name $ACCOUNT_NAME \
+            --destination $SHARE_NAME/mappings \
+            --source ./stubs/mappings \
+            --auth-mode login
 
+          # Upload __files folder
+          echo "Uploading __files..."
           az storage file upload-batch \
-            --account-name ${{ vars.STORAGE_ACCOUNT }} \
-            --destination ${{ vars.FILE_SHARE }}/__files \
-            --source ./stubs/__files
+            --account-name $ACCOUNT_NAME \
+            --destination $SHARE_NAME/__files \
+            --source ./stubs/__files \
+            --auth-mode login
+
+          echo "✅ Successfully uploaded WireMock stubs!"
+    
