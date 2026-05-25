@@ -42,33 +42,16 @@ jobs:
 
           # Create directories if they don't exist
           echo "Creating directories..."
-          az storage directory create \
-            --account-name $ACCOUNT_NAME \
-            --share-name $SHARE_NAME \
-            --name mappings \
-            --auth-mode login || true
 
-          az storage directory create \
-            --account-name $ACCOUNT_NAME \
-            --share-name $SHARE_NAME \
-            --name __files \
-            --auth-mode login || true
+          az storage directory create --account-name $ACCOUNT_NAME --share-name $SHARE_NAME --name mappings --auth-mode login --enable-file-backup-request-intent || true
+          az storage directory create --account-name $ACCOUNT_NAME --share-name $SHARE_NAME --name __files --auth-mode login --enable-file-backup-request-intent || true
 
           # Upload mappings folder
           echo "Uploading mappings..."
-          az storage file upload-batch \
-            --account-name $ACCOUNT_NAME \
-            --destination $SHARE_NAME/mappings \
-            --source ./stubs/mappings \
-            --auth-mode login
 
-          # Upload __files folder
-          echo "Uploading __files..."
-          az storage file upload-batch \
-            --account-name $ACCOUNT_NAME \
-            --destination $SHARE_NAME/__files \
-            --source ./stubs/__files \
-            --auth-mode login
+          az storage file upload-batch --account-name $ACCOUNT_NAME --destination $SHARE_NAME/mappings --source ./stubs/mappings --auth-mode login --enable-file-backup-request-intent
+          az storage file upload-batch --account-name $ACCOUNT_NAME --destination $SHARE_NAME/__files --source ./stubs/__files --auth-mode login --enable-file-backup-request-intent
+
 
           echo "✅ Successfully uploaded WireMock stubs!"
     
