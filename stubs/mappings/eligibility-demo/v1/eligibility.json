@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/benefits"
+    "url": "/eligibility-demo/v1/eligibility"
   },
   "response": {
     "status": 200,
