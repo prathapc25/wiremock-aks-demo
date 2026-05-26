@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/cello"
+  },
+  "response": {
+    "status": 200,
+    "body": "Hello World from WireMock on Azure! May 25 4:35 pm",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}  
