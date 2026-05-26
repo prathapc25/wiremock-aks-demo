@@ -42,4 +42,14 @@ jobs:
           az storage file upload-batch --account-name $ACCOUNT_NAME --account-key $ACCOUNT_KEY --destination $SHARE_NAME/__files --source ./stubs/__files
 
           echo "✅ Successfully uploaded WireMock stubs!"
-    
+
+    - name: Reload WireMock mappings via Admin API 
+      run: |
+          WIREMOCK_URL="https://${{ vars.WIREMOCK_FQDN }}"
+          
+          echo "Resetting mappings..."
+          curl -X POST "${WIREMOCK_URL}/__admin/mappings/reset" \
+            -H "Content-Type: application/json" \
+            --fail --silent --show-error
+          
+          echo "Mappings reloaded successfully!"
