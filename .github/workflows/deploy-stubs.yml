@@ -45,7 +45,7 @@ jobs:
 
     - name: Reload WireMock mappings via Admin API 
       run: |
-          WIREMOCK_URL="https://${{ vars.WIREMOCK_FQDN }}"
+          WIREMOCK_URL="http://${{ vars.WIREMOCK_FQDN }}"
           
           echo "Resetting mappings..."
           curl -X POST "${WIREMOCK_URL}/__admin/mappings/reset" \
