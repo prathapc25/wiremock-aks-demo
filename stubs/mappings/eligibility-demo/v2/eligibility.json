@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/benefits"
+  },
+  "response": {
+    "status": 200,
+    "body": "Hello World from   Eligiblity version 2.0",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}
