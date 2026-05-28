@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/member-billing/dev/v1/enrollees/123"
+  },
+  "response": {
+    "status": 200,
+    "body": "Hello World from Member-Billing version 1.0",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}
