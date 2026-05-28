@@ -5,7 +5,7 @@
   },
   "response": {
     "status": 200,
-    "body": "<h3>Hello World from   Benefits version 1.0</h3>",
+    "body": "Hello World from   Benefits version 1.0",
     "headers": {
       "Content-Type": "text/plain"
     }
