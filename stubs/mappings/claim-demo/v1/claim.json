@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/claim-demo/v1/claim"
+  },
+  "response": {
+    "status": 200,
+    "body": "Hello World from   Claim version 1.0  version",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}
