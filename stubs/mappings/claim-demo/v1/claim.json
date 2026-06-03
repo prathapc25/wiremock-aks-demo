@@ -5,7 +5,7 @@
   },
   "response": {
     "status": 200,
-    "body": "Hello World from   Claim version 1.0  version",
+    "body": "Hello World from   Claim version 1.0  version, modified on June 3",
     "headers": {
       "Content-Type": "text/plain"
     }
